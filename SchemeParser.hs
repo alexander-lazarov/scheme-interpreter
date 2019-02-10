@@ -35,10 +35,21 @@ boolLiteral = true <|> false
 digitParser :: Parser Integer
 digitParser = fmap (fromIntegral . (subtract (ord '0')) . ord) $ digit
 
-intLiteral :: Parser Expression
-intLiteral = do
+positiveInt' :: [Integer] -> Integer
+positiveInt' = foldl1' (\r x -> r * 10 + x)
+
+positiveInt :: Parser Expression
+positiveInt = do
     ns <- some digitParser
-    return $ IntLiteral $ foldl1' (\r x -> r * 10 + x) ns
+    return $ IntLiteral $ positiveInt' ns
+
+negativeInt = do
+    char '-'
+    ns <- some digitParser
+    return $ IntLiteral $ -(positiveInt' ns)
+
+intLiteral :: Parser Expression
+intLiteral = positiveInt <|> negativeInt
 
 stringLiteral :: Parser Expression
 stringLiteral = do

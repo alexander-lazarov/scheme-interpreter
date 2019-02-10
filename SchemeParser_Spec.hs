@@ -1,8 +1,8 @@
 import Test.Hspec
 import Control.Exception (evaluate)
 import Parser (parse)
-import SchemeParser
 import SchemeGrammar
+import SchemeParser
 
 main :: IO ()
 main = hspec $ do
@@ -24,6 +24,8 @@ main = hspec $ do
       parse intLiteral "1" `shouldBe` Just (IntLiteral 1)
     it "parses many digits" $ do
       parse intLiteral "123" `shouldBe` Just (IntLiteral 123)
+    it "parses many digits" $ do
+      parse intLiteral "-123" `shouldBe` Just (IntLiteral $ -123)
 
   describe "stringLiteral" $ do
     it "parses strings" $ do
