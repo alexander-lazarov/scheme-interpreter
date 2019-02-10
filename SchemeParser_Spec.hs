@@ -33,6 +33,11 @@ main = hspec $ do
       parse stringLiteral "\"asdf\""   `shouldBe` Just (StringLiteral "asdf")
       parse stringLiteral "\"asdf\"\"" `shouldBe` Just (StringLiteral "asdf")
 
+  describe "arithmeticOp" $ do
+    it "parses arithmetic ops" $ do
+      parse arithmeticOp "+" `shouldBe` Just (ArithmeticOp '+')
+      parse arithmeticOp "-" `shouldBe` Just (ArithmeticOp '-')
+
   describe "identifier" $ do
     it "does not match an empty string" $ do
       parse identifier "" `shouldBe` Nothing

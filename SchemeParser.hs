@@ -3,6 +3,7 @@ module SchemeParser
    , boolLiteral
    , intLiteral
    , stringLiteral
+   , arithmeticOp
    , identifier
    , functionCall
    , expression
@@ -69,6 +70,11 @@ stringLiteral = do
     char '"'
     return $ StringLiteral str
 
+arithmeticOp :: Parser Expression
+arithmeticOp = do
+  c <- char '+' <|> char '-' <|> char '*' <|> char '/'
+  return $ ArithmeticOp c
+
 identifier :: Parser Expression
 identifier = do
     x <- letter
@@ -96,5 +102,6 @@ expression =
          <|> boolLiteral
          <|> intLiteral
          <|> stringLiteral
+         <|> arithmeticOp
          <|> identifier
          <|> functionCall

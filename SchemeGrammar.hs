@@ -10,7 +10,7 @@ data Expression =
                 | IntLiteral Integer
                 | StringLiteral String
                 | Identifier String
-                | ArithmeticOperator Char
+                | ArithmeticOp Char
                 | IfStatement Expression Expression Expression
                 | Header [Expression]
                 | DefineStatement Expression Expression
