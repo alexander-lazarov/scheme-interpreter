@@ -15,7 +15,7 @@ module Parser
     , lowercase
     , uppercase
     , letter
-    , number
+    , digit
     , alnum
     ) where
 
@@ -93,8 +93,8 @@ uppercase = sat $ \c -> 'A' <= c && c <= 'Z'
 letter :: Parser Char
 letter = lowercase <|> uppercase
 
-number :: Parser Char
-number = sat $ \c -> '0' <= c && c <= '9'
+digit :: Parser Char
+digit = sat $ \c -> '0' <= c && c <= '9'
 
 alnum :: Parser Char
-alnum = letter <|> number
+alnum = letter <|> digit
