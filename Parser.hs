@@ -15,6 +15,7 @@ module Parser
     , lowercase
     , uppercase
     , letter
+    , number
     ) where
 
 import Data.Maybe (listToMaybe)
@@ -90,3 +91,6 @@ uppercase = sat $ \c -> 'A' <= c && c <= 'Z'
 
 letter :: Parser Char
 letter = lowercase <|> uppercase
+
+number :: Parser Char
+number = sat $ \c -> '0' <= c && c <= '9'

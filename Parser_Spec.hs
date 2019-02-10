@@ -90,5 +90,16 @@ main = hspec $ do
       parse letter "5" `shouldBe` Nothing
       parse letter " " `shouldBe` Nothing
 
+  describe "number" $ do
+    it "does not match chars" $ do
+      parse number "a" `shouldBe` Nothing
+      parse number "A" `shouldBe` Nothing
+      parse number "k" `shouldBe` Nothing
+      parse number "K" `shouldBe` Nothing
+      parse number ""  `shouldBe` Nothing
+      parse number " " `shouldBe` Nothing
+    it "matches numbers" $ do
+      parse number "5" `shouldBe` Just '5'
+
   where
     parserA = result 'a'
