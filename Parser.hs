@@ -1,7 +1,7 @@
 {-# LANGUAGE InstanceSigs #-}
 
 module Parser
-    ( Parser
+    ( Parser(..)
     , (<|>)
     , parse
     , result
@@ -16,6 +16,7 @@ module Parser
     , uppercase
     , letter
     , number
+    , alnum
     ) where
 
 import Data.Maybe (listToMaybe)
@@ -94,3 +95,6 @@ letter = lowercase <|> uppercase
 
 number :: Parser Char
 number = sat $ \c -> '0' <= c && c <= '9'
+
+alnum :: Parser Char
+alnum = letter <|> number
