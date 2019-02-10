@@ -2,6 +2,7 @@
 
 module Parser
     ( Parser
+    , (<|>)
     , parse
     , result
     , empty
@@ -11,6 +12,9 @@ module Parser
     , string
     , many
     , some
+    , lowercase
+    , uppercase
+    , letter
     ) where
 
 import Data.Maybe (listToMaybe)
@@ -43,6 +47,9 @@ instance Alternative Parser where
     Parser x <|> Parser y = Parser $ \inp ->
         x inp ++ y inp
 
+(<|>) :: Parser a -> Parser a -> Parser a
+(<|>) = (A.<|>)
+
 parse :: Parser a -> String -> Maybe a
 parse p = fmap snd . listToMaybe . runParser p
 
@@ -53,6 +60,12 @@ nom :: Parser Char
 nom = Parser $ \inp -> case inp of
                            []     -> []
                            (x:xs) -> [(xs, x)]
+
+many :: Parser a -> Parser [a]
+many = A.many
+
+some :: Parser a -> Parser [a]
+some = A.some
 
 sat :: (Char -> Bool) -> Parser Char
 sat p = do
@@ -69,8 +82,11 @@ string (x:xs) = do
   rs <- string xs
   result $ r:rs
 
-many :: Parser a -> Parser [a]
-many = A.many
+lowercase :: Parser Char
+lowercase = sat $ \c -> 'a' <= c && c <= 'z'
 
-some :: Parser a -> Parser [a]
-some = A.some
+uppercase :: Parser Char
+uppercase = sat $ \c -> 'A' <= c && c <= 'Z'
+
+letter :: Parser Char
+letter = lowercase <|> uppercase
