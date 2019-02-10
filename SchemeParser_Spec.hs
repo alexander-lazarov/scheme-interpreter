@@ -25,6 +25,12 @@ main = hspec $ do
     it "parses many digits" $ do
       parse intLiteral "123" `shouldBe` Just (IntLiteral 123)
 
+  describe "stringLiteral" $ do
+    it "parses strings" $ do
+      parse stringLiteral "\"\""       `shouldBe` Just (StringLiteral "")
+      parse stringLiteral "\"asdf\""   `shouldBe` Just (StringLiteral "asdf")
+      parse stringLiteral "\"asdf\"\"" `shouldBe` Just (StringLiteral "asdf")
+
   describe "identifier" $ do
     it "does not match an empty string" $ do
       parse identifier "" `shouldBe` Nothing

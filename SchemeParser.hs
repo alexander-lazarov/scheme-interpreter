@@ -2,6 +2,7 @@ module SchemeParser
    ( nullLiteral
    , boolLiteral
    , intLiteral
+   , stringLiteral
    , identifier
    , functionCall
    , expression
@@ -37,7 +38,14 @@ digitParser = fmap (fromIntegral . (subtract (ord '0')) . ord) $ digit
 intLiteral :: Parser Expression
 intLiteral = do
     ns <- some digitParser
-    pure $ IntLiteral $ foldl1' (\r x -> r * 10 + x) ns
+    return $ IntLiteral $ foldl1' (\r x -> r * 10 + x) ns
+
+stringLiteral :: Parser Expression
+stringLiteral = do
+    char '"'
+    str <- many $ sat $ \c -> c /= '"'
+    char '"'
+    return $ StringLiteral str
 
 identifier :: Parser Expression
 identifier = do
@@ -57,4 +65,10 @@ functionCall = do
     result $ FunctionCall e es
 
 expression :: Parser Expression
-expression = identifier <|> functionCall
+expression =
+             nullLiteral
+         <|> boolLiteral
+         <|> intLiteral
+         <|> stringLiteral
+         <|> identifier
+         <|> functionCall
