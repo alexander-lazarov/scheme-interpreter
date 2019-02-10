@@ -60,6 +60,6 @@ main = hspec $ do
                                                                  , Identifier "c"])
 
     it "ignores whitespace" $ do
-      parse functionCall "  (a b   c  )" `shouldBe` Just (FunctionCall (Identifier "a")
+      parse functionCall "  (a b\r\n   c  )\n" `shouldBe` Just (FunctionCall (Identifier "a")
                                                                            [ Identifier "b"
                                                                            , Identifier "c"])
