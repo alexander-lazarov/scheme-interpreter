@@ -7,7 +7,7 @@ where
 data Expression =
                   NullLiteral
                 | BoolLiteral Bool
-                | IntegerLiteral Integer
+                | IntLiteral Integer
                 | StringLiteral String
                 | Identifier String
                 | ArithmeticOperator Char

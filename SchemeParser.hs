@@ -1,6 +1,7 @@
 module SchemeParser
    ( nullLiteral
    , boolLiteral
+   , intLiteral
    , identifier
    , functionCall
    , expression
@@ -9,6 +10,8 @@ where
 
 import Parser
 import SchemeGrammar
+import Data.Char (ord)
+import Data.List (foldl1')
 
 nullLiteral :: Parser Expression
 nullLiteral = do
@@ -27,6 +30,14 @@ false = do
 
 boolLiteral :: Parser Expression
 boolLiteral = true <|> false
+
+digitParser :: Parser Integer
+digitParser = fmap (fromIntegral . (subtract (ord '0')) . ord) $ digit
+
+intLiteral :: Parser Expression
+intLiteral = do
+    ns <- some digitParser
+    pure $ IntLiteral $ foldl1' (\r x -> r * 10 + x) ns
 
 identifier :: Parser Expression
 identifier = do

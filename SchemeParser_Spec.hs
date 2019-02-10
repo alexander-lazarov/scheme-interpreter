@@ -19,6 +19,12 @@ main = hspec $ do
     it "does not match anything else" $ do
       parse nullLiteral "asdf" `shouldBe` Nothing
 
+  describe "intLiteral" $ do
+    it "parses 1 digit" $ do
+      parse intLiteral "1" `shouldBe` Just (IntLiteral 1)
+    it "parses many digits" $ do
+      parse intLiteral "123" `shouldBe` Just (IntLiteral 123)
+
   describe "identifier" $ do
     it "does not match an empty string" $ do
       parse identifier "" `shouldBe` Nothing
