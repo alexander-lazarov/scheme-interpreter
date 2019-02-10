@@ -14,6 +14,17 @@ import SchemeGrammar
 import Data.Char (ord)
 import Data.List (foldl1')
 
+whitespace :: Parser Char
+whitespace = char ' '
+         <|> char '\n'
+         <|> char '\r'
+
+optionalWhitespace :: Parser String
+optionalWhitespace = many whitespace
+
+mandatoryWhitespace :: Parser String
+mandatoryWhitespace = some whitespace
+
 nullLiteral :: Parser Expression
 nullLiteral = do
   string "null"
@@ -66,13 +77,17 @@ identifier = do
 
 functionCall :: Parser Expression
 functionCall = do
+    optionalWhitespace
     char '('
+    optionalWhitespace
     e  <- expression
     es <- many $ do
-      char ' '
+      mandatoryWhitespace
       ee <- expression
       result $ ee
+    optionalWhitespace
     char ')'
+    optionalWhitespace
     result $ FunctionCall e es
 
 expression :: Parser Expression
