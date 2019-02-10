@@ -6,7 +6,7 @@ where
 
 data Expression =
                   NullLiteral
-                | BooleanLiteral Bool
+                | BoolLiteral Bool
                 | IntegerLiteral Integer
                 | StringLiteral String
                 | Identifier String
@@ -14,6 +14,6 @@ data Expression =
                 | IfStatement Expression Expression Expression
                 | Header [Expression]
                 | DefineStatement Expression Expression
-                | FunctionCall [Expression]
+                | FunctionCall Expression [Expression]
 
   deriving (Eq, Show)

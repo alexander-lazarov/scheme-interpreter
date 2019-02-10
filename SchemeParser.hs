@@ -1,6 +1,6 @@
 module SchemeParser
    ( nullLiteral
-   , BoolLiteral
+   , boolLiteral
    , identifier
    , functionCall
    , expression
@@ -25,23 +25,14 @@ false = do
   string "#f"
   return $ BoolLiteral False
 
-BoolLiteral :: Parser Expression
-BoolLiteral = true <|> false
+boolLiteral :: Parser Expression
+boolLiteral = true <|> false
 
 identifier :: Parser Expression
 identifier = do
     x <- letter
-    xs <- many alnum
+    xs <- many (alnum <|> char '-')
     result $ Identifier (x:xs)
-
--- identifiersList :: Parser [Expression]
--- identifiersList = do
---     i <- identifier
---     is <- many $ do
---        char ' '
---        ii <- identifier
---        result $ ii
---     result $ i:is
 
 functionCall :: Parser Expression
 functionCall = do
@@ -52,7 +43,7 @@ functionCall = do
       ee <- expression
       result $ ee
     char ')'
-    result $ FunctionCall (e:es)
+    result $ FunctionCall e es
 
 expression :: Parser Expression
 expression = identifier <|> functionCall

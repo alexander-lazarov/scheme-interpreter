@@ -35,12 +35,12 @@ main = hspec $ do
     it "matches a single term" $ do
       parse expression "asd" `shouldBe` Just (Identifier "asd")
     it "matches a non-nested expression" $ do
-      parse expression "(a b c)" `shouldBe` Just (FunctionCall [ Identifier "a"
-                                                               , Identifier "b"
+      parse expression "(a b c)" `shouldBe` Just (FunctionCall (Identifier "a")
+                                                               [ Identifier "b"
                                                                , Identifier "c"])
 
   describe "functionCall" $ do
     it "does match a function call" $ do
-      parse functionCall "(a b c)" `shouldBe` Just (FunctionCall [ Identifier "a"
-                                                                 , Identifier "b"
+      parse functionCall "(a b c)" `shouldBe` Just (FunctionCall (Identifier "a")
+                                                                 [ Identifier "b"
                                                                  , Identifier "c"])
