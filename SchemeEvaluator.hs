@@ -31,6 +31,11 @@ eval bindings (FunctionCall function operands) =
     eval'             = eval bindings
     functionEvaluated = eval' function
     operandsEvaluated = fmap eval' operands
+eval bindings (Identifier i)                  =
+  case binding of Nothing -> error $ "Unknown binding " ++ i
+                  Just e  -> e
+  where
+    binding = lookup i bindings
 
 dispatch :: [Binding] -> Expression -> [Expression] -> Expression
 dispatch bindings (ArithmeticOp operator) operands =

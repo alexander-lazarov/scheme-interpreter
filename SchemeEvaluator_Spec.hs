@@ -11,6 +11,9 @@ main = hspec $ do
     it "evaluates arithmetic expression calls" $ do
       eval [] (FunctionCall (ArithmeticOp '+') [IntLiteral 2, IntLiteral 3])
          `shouldBe` IntLiteral 5
+    it "evaluates identifiers" $ do
+      eval [("foo", NullLiteral)] (Identifier "foo") `shouldBe` NullLiteral
+
   describe "dispatch" $ do
     it "evalulates arithmetic expressions" $ do
       dispatch [] (ArithmeticOp '+') [IntLiteral 2, IntLiteral 3]
