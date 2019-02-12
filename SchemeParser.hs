@@ -127,4 +127,5 @@ expression =
          <|> stringLiteral
          <|> arithmeticOp
          <|> identifier
+         <|> ifStatement
          <|> functionCall
