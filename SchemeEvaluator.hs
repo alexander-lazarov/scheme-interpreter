@@ -13,6 +13,10 @@ toInt :: Expression -> Integer
 toInt (IntLiteral i) = i
 toInt _              = error "Cannot get the integer value of a non-integer"
 
+toBool :: Expression -> Bool
+toBool (BoolLiteral b) = b
+toBool _               = error "Cannot cast to bool"
+
 arithmeticOpDispatch :: Char -> (Integer -> Integer -> Integer)
 arithmeticOpDispatch '+' = (+)
 arithmeticOpDispatch '-' = (-)
@@ -25,6 +29,13 @@ eval _        (BoolLiteral b)                  = BoolLiteral b
 eval _        (IntLiteral i)                   = IntLiteral i
 eval _        (StringLiteral s)                = StringLiteral s
 eval _        (ArithmeticOp o)                 = ArithmeticOp o
+eval bindings (IfStatement p t f)              =
+  if toBool pval then tval else fval
+  where
+    eval'     = eval bindings
+    pval      = eval' p
+    tval      = eval' t
+    fval      = eval' f
 eval bindings (FunctionCall function operands) =
   dispatch bindings functionEvaluated operandsEvaluated
   where
