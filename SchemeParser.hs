@@ -4,6 +4,7 @@ module SchemeParser
    , intLiteral
    , stringLiteral
    , arithmeticOp
+   , compOp
    , identifier
    , ifStatement
    , functionCall
@@ -76,6 +77,11 @@ arithmeticOp = do
   c <- char '+' <|> char '-' <|> char '*' <|> char '/'
   return $ ArithmeticOp c
 
+compOp :: Parser Expression
+compOp = do
+  c <- char '=' <|> char '<' <|> char '>'
+  return $ CompOp c
+
 identifier :: Parser Expression
 identifier = do
     x <- letter
@@ -126,6 +132,7 @@ expression =
          <|> intLiteral
          <|> stringLiteral
          <|> arithmeticOp
+         <|> compOp
          <|> identifier
          <|> ifStatement
          <|> functionCall

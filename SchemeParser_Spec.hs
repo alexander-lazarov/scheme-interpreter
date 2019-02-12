@@ -38,6 +38,10 @@ main = hspec $ do
       parse arithmeticOp "+" `shouldBe` Just (ArithmeticOp '+')
       parse arithmeticOp "-" `shouldBe` Just (ArithmeticOp '-')
 
+  describe "compOp" $ do
+    it "parses comparsion ops" $ do
+      parse compOp "=" `shouldBe` Just (CompOp '=')
+
   describe "identifier" $ do
     it "does not match an empty string" $ do
       parse identifier "" `shouldBe` Nothing

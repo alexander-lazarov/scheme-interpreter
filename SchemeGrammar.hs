@@ -11,6 +11,7 @@ data Expression =
                 | StringLiteral String
                 | Identifier String
                 | ArithmeticOp Char
+                | CompOp Char
                 | IfStatement Expression Expression Expression
                 | Header [Expression]
                 | DefineStatement Expression Expression
