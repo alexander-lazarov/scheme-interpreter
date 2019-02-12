@@ -7,17 +7,7 @@ where
 
 import SchemeGrammar
 
-eval :: Expression -> Expression
-eval NullLiteral                      = NullLiteral
-eval (BoolLiteral b)                  = BoolLiteral b
-eval (IntLiteral i)                   = IntLiteral i
-eval (StringLiteral s)                = StringLiteral s
-eval (ArithmeticOp o)                 = ArithmeticOp o
-eval (FunctionCall function operands) =
-  dispatch functionEvaluated operandsEvaluated
-  where
-    functionEvaluated = eval function
-    operandsEvaluated = fmap eval operands
+type Binding = (String, Expression)
 
 toInt :: Expression -> Integer
 toInt (IntLiteral i) = i
@@ -29,9 +19,23 @@ arithmeticOpDispatch '-' = (-)
 arithmeticOpDispatch '*' = (*)
 arithmeticOpDispatch '/' = quot
 
-dispatch :: Expression -> [Expression] -> Expression
-dispatch (ArithmeticOp operator) operands =
+eval :: [Binding] -> Expression -> Expression
+eval _        NullLiteral                      = NullLiteral
+eval _        (BoolLiteral b)                  = BoolLiteral b
+eval _        (IntLiteral i)                   = IntLiteral i
+eval _        (StringLiteral s)                = StringLiteral s
+eval _        (ArithmeticOp o)                 = ArithmeticOp o
+eval bindings (FunctionCall function operands) =
+  dispatch bindings functionEvaluated operandsEvaluated
+  where
+    eval'             = eval bindings
+    functionEvaluated = eval' function
+    operandsEvaluated = fmap eval' operands
+
+dispatch :: [Binding] -> Expression -> [Expression] -> Expression
+dispatch bindings (ArithmeticOp operator) operands =
   IntLiteral $ foldl1 operatorFunction operandValues
   where
+    eval'            = eval bindings
     operatorFunction = arithmeticOpDispatch operator
-    operandValues = fmap (toInt . eval) operands
+    operandValues    = fmap (toInt . eval') operands
