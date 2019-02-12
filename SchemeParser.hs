@@ -5,6 +5,7 @@ module SchemeParser
    , stringLiteral
    , arithmeticOp
    , identifier
+   , ifStatement
    , functionCall
    , expression
    )
@@ -80,6 +81,28 @@ identifier = do
     x <- letter
     xs <- many (alnum <|> char '-')
     result $ Identifier (x:xs)
+
+ifStatement :: Parser Expression
+ifStatement = do
+  optionalWhitespace
+  char '('
+  optionalWhitespace
+
+  string "if"
+  mandatoryWhitespace
+
+  p  <- expression
+  mandatoryWhitespace
+
+  t <- expression
+
+  mandatoryWhitespace
+  f  <- expression
+
+  optionalWhitespace
+  char ')'
+  optionalWhitespace
+  result $ IfStatement p t f
 
 functionCall :: Parser Expression
 functionCall = do

@@ -48,6 +48,11 @@ main = hspec $ do
     it "does not match a string starting with a number" $ do
       parse identifier "1adsf" `shouldBe` Nothing
 
+  describe "ifStatement" $ do
+    it "matches if statments" $ do
+      parse ifStatement "(if c 1 2)" `shouldBe`
+          Just (IfStatement (Identifier "c") (IntLiteral 1) (IntLiteral 2))
+
   describe "expression" $ do
     it "does not match an empty string" $ do
       parse expression "" `shouldBe` Nothing
