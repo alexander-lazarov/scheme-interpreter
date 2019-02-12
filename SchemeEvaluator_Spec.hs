@@ -23,3 +23,7 @@ main = hspec $ do
     it "evalulates arithmetic expressions" $ do
       dispatch [] (ArithmeticOp '+') [IntLiteral 2, IntLiteral 3]
          `shouldBe` IntLiteral 5
+    it "evalulates comparsion expressions" $ do
+      dispatch [] (CompOp '=') [IntLiteral 2, IntLiteral 3]
+         `shouldBe` BoolLiteral False
+

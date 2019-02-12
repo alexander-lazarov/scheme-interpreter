@@ -23,6 +23,11 @@ arithmeticOpDispatch '-' = (-)
 arithmeticOpDispatch '*' = (*)
 arithmeticOpDispatch '/' = quot
 
+compOpDispatch :: Char -> (Integer -> Integer -> Bool)
+compOpDispatch '=' = (==)
+compOpDispatch '<' = (<)
+compOpDispatch '>' = (>)
+
 eval :: [Binding] -> Expression -> Expression
 eval _        NullLiteral                      = NullLiteral
 eval _        (BoolLiteral b)                  = BoolLiteral b
@@ -55,3 +60,12 @@ dispatch bindings (ArithmeticOp operator) operands =
     eval'            = eval bindings
     operatorFunction = arithmeticOpDispatch operator
     operandValues    = fmap (toInt . eval') operands
+
+dispatch bindings (CompOp op) (x:y:[]) =
+  BoolLiteral $ op' xv yv
+  where
+    eval' = eval bindings
+    op'   = compOpDispatch op
+    xv    = toInt x
+    yv    = toInt y
+dispatch bindings (CompOp operator) _  = error "Arity mismatch"
