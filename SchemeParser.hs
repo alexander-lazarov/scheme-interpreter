@@ -7,6 +7,7 @@ module SchemeParser
    , compOp
    , identifier
    , ifStatement
+   , defineStatement
    , functionCall
    , expression
    )
@@ -82,6 +83,12 @@ compOp = do
   c <- char '=' <|> char '<' <|> char '>'
   return $ CompOp c
 
+identifierString :: Parser String
+identifierString = do
+  x <- letter
+  xs <- many (alnum <|> char '-')
+  result $ x:xs
+
 identifier :: Parser Expression
 identifier = do
     x <- letter
@@ -110,6 +117,31 @@ ifStatement = do
   optionalWhitespace
   result $ IfStatement p t f
 
+defineStatement :: Parser Expression
+defineStatement = do
+  optionalWhitespace
+  char '('
+  optionalWhitespace
+
+  string "define"
+  mandatoryWhitespace
+
+  char '('
+  optionalWhitespace
+  funcName <- identifierString
+  arguments <- many $ do
+    mandatoryWhitespace
+    identifierString
+
+  optionalWhitespace
+  char ')'
+  mandatoryWhitespace
+  body <- expression
+  optionalWhitespace
+  char ')'
+  optionalWhitespace
+  result $ DefineStatement funcName arguments body
+
 functionCall :: Parser Expression
 functionCall = do
     optionalWhitespace
@@ -135,4 +167,5 @@ expression =
          <|> compOp
          <|> identifier
          <|> ifStatement
+         <|> defineStatement
          <|> functionCall

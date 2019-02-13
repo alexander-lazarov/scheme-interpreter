@@ -13,8 +13,7 @@ data Expression =
                 | ArithmeticOp Char
                 | CompOp Char
                 | IfStatement Expression Expression Expression
-                | Header [Expression]
-                | DefineStatement Expression Expression
+                | DefineStatement String [String] Expression
                 | FunctionCall Expression [Expression]
 
   deriving (Eq, Show)

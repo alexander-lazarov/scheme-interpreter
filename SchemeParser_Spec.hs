@@ -57,6 +57,10 @@ main = hspec $ do
       parse ifStatement "(if c 1 2)" `shouldBe`
           Just (IfStatement (Identifier "c") (IntLiteral 1) (IntLiteral 2))
 
+  describe "defineStatement" $ do
+    it "matches function definitions" $ do
+      parse defineStatement "(define (p a b) null)" `shouldBe`
+        Just (DefineStatement "p" ["a", "b"] NullLiteral)
   describe "functionCall" $ do
     it "does match a function call" $ do
       parse functionCall "(a b c)" `shouldBe` Just (FunctionCall (Identifier "a")
