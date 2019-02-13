@@ -34,6 +34,7 @@ eval _        (BoolLiteral b)                  = BoolLiteral b
 eval _        (IntLiteral i)                   = IntLiteral i
 eval _        (StringLiteral s)                = StringLiteral s
 eval _        (ArithmeticOp o)                 = ArithmeticOp o
+eval _        (CompOp o)                       = CompOp o
 eval _        (DefineStatement n b p)          = DefineStatement n b p
 eval bindings (IfStatement p t f)              =
   if toBool pval then tval else fval
@@ -70,7 +71,6 @@ dispatch bindings (CompOp op) (x:y:[]) =
     xv    = toInt x
     yv    = toInt y
 dispatch bindings (CompOp operator) _  = error "Arity mismatch"
-
 dispatch bindings (DefineStatement _ defArgs body) callArgs =
   if length defArgs /= length callArgs then
     error "Arity mismatch"
@@ -80,3 +80,5 @@ dispatch bindings (DefineStatement _ defArgs body) callArgs =
     boundParams = zip defArgs callArgs
     newBindings = boundParams ++ bindings
     eval' = eval newBindings
+
+dispatch _ _ _                        = error "Dispatch error"
