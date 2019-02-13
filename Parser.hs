@@ -1,4 +1,5 @@
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Parser
     ( Parser(..)
@@ -6,6 +7,7 @@ module Parser
     , parse
     , result
     , empty
+    , endOfInput
     , nom
     , sat
     , char
@@ -57,6 +59,11 @@ parse p = fmap snd . listToMaybe . runParser p
 
 result :: a -> Parser a
 result = pure
+
+endOfInput :: Parser ()
+endOfInput = Parser $ \case
+    [] -> pure $ pure ()
+    _  -> []
 
 nom :: Parser Char
 nom = Parser $ \inp -> case inp of

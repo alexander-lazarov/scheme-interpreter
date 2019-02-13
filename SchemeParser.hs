@@ -10,6 +10,7 @@ module SchemeParser
    , defineStatement
    , functionCall
    , expression
+   , program
    )
 where
 
@@ -169,3 +170,13 @@ expression =
          <|> ifStatement
          <|> defineStatement
          <|> functionCall
+
+program :: Parser [Expression]
+program = do
+  es <- many $ do
+    optionalWhitespace
+    e <- expression
+    optionalWhitespace
+    return e
+  endOfInput
+  result $ es
