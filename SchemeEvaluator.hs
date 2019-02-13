@@ -1,5 +1,6 @@
 module SchemeEvaluator
   ( eval
+  , evalProgram
   , dispatch
   )
 
@@ -82,3 +83,11 @@ dispatch bindings (DefineStatement _ defArgs body) callArgs =
     eval' = eval newBindings
 
 dispatch _ _ _                        = error "Dispatch error"
+
+evalProgram :: [Binding] -> [Expression] -> Expression
+evalProgram bindings (e:[]) = eval bindings e
+evalProgram bindings (e:es) =
+  case res of (DefineStatement name _ _) -> evalProgram ((name, res ):bindings) es
+              _                          -> evalProgram bindings es
+  where
+    res = eval bindings e

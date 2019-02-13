@@ -5,8 +5,8 @@ import SchemeEvaluator
 
 evalStr :: String -> Maybe Expression
 evalStr inp = do
-  parsed <- last <$> parse program inp
-  evaluated <- Just $ eval [] parsed
+  parsed <- parse program inp
+  evaluated <- Just $ evalProgram [] parsed
   return $ evaluated
 
 getLines :: IO [String]
