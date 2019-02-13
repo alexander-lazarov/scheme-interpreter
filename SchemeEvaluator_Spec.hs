@@ -18,6 +18,9 @@ main = hspec $ do
          `shouldBe` IntLiteral 2
     it "evaluates identifiers" $ do
       eval [("foo", NullLiteral)] (Identifier "foo") `shouldBe` NullLiteral
+    it "evaluates function calls" $ do
+      eval [("foo", DefineStatement "foo" ["bar"] (Identifier "bar"))] (FunctionCall (Identifier "foo") [(IntLiteral 1)])
+         `shouldBe` IntLiteral 1
 
   describe "dispatch" $ do
     it "evalulates arithmetic expressions" $ do
@@ -26,4 +29,3 @@ main = hspec $ do
     it "evalulates comparsion expressions" $ do
       dispatch [] (CompOp '=') [IntLiteral 2, IntLiteral 3]
          `shouldBe` BoolLiteral False
-
