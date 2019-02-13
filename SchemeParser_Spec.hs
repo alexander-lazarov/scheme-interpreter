@@ -57,16 +57,6 @@ main = hspec $ do
       parse ifStatement "(if c 1 2)" `shouldBe`
           Just (IfStatement (Identifier "c") (IntLiteral 1) (IntLiteral 2))
 
-  describe "expression" $ do
-    it "does not match an empty string" $ do
-      parse expression "" `shouldBe` Nothing
-    it "matches a single term" $ do
-      parse expression "asd" `shouldBe` Just (Identifier "asd")
-    it "matches a non-nested expression" $ do
-      parse expression "(a b c)" `shouldBe` Just (FunctionCall (Identifier "a")
-                                                               [ Identifier "b"
-                                                               , Identifier "c"])
-
   describe "functionCall" $ do
     it "does match a function call" $ do
       parse functionCall "(a b c)" `shouldBe` Just (FunctionCall (Identifier "a")
@@ -77,3 +67,12 @@ main = hspec $ do
       parse functionCall "  (a b\r\n   c  )\n" `shouldBe` Just (FunctionCall (Identifier "a")
                                                                            [ Identifier "b"
                                                                            , Identifier "c"])
+  describe "expression" $ do
+    it "does not match an empty string" $ do
+      parse expression "" `shouldBe` Nothing
+    it "matches a single term" $ do
+      parse expression "asd" `shouldBe` Just (Identifier "asd")
+    it "matches a non-nested expression" $ do
+      parse expression "(a b c)" `shouldBe` Just (FunctionCall (Identifier "a")
+                                                               [ Identifier "b"
+                                                               , Identifier "c"])
