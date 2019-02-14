@@ -32,17 +32,17 @@ mandatoryWhitespace = some whitespace
 
 nullLiteral :: Parser Expression
 nullLiteral = do
-  string "null"
+  _ <- string "null"
   return NullLiteral
 
 true :: Parser Expression
 true = do
-  string "#t"
+  _ <- string "#t"
   return $ BoolLiteral True
 
 false :: Parser Expression
 false = do
-  string "#f"
+  _ <- string "#f"
   return $ BoolLiteral False
 
 boolLiteral :: Parser Expression
@@ -59,8 +59,9 @@ positiveInt = do
     ns <- some digitParser
     return $ IntLiteral $ positiveInt' ns
 
+negativeInt :: Parser Expression
 negativeInt = do
-    char '-'
+    _ <- char '-'
     ns <- some digitParser
     return $ IntLiteral $ -(positiveInt' ns)
 
@@ -69,9 +70,9 @@ intLiteral = positiveInt <|> negativeInt
 
 stringLiteral :: Parser Expression
 stringLiteral = do
-    char '"'
+    _ <- char '"'
     str <- many $ sat $ \c -> c /= '"'
-    char '"'
+    _ <- char '"'
     return $ StringLiteral str
 
 arithmeticOp :: Parser Expression
@@ -98,64 +99,64 @@ identifier = do
 
 ifStatement :: Parser Expression
 ifStatement = do
-  optionalWhitespace
-  char '('
-  optionalWhitespace
+  _ <- optionalWhitespace
+  _ <- char '('
+  _ <- optionalWhitespace
 
-  string "if"
-  mandatoryWhitespace
+  _ <- string "if"
+  _ <- mandatoryWhitespace
 
-  p  <- expression
-  mandatoryWhitespace
+  p <- expression
+  _ <- mandatoryWhitespace
 
   t <- expression
 
-  mandatoryWhitespace
-  f  <- expression
+  _ <- mandatoryWhitespace
+  f <- expression
 
-  optionalWhitespace
-  char ')'
-  optionalWhitespace
+  _ <- optionalWhitespace
+  _ <- char ')'
+  _ <- optionalWhitespace
   result $ IfStatement p t f
 
 defineStatement :: Parser Expression
 defineStatement = do
-  optionalWhitespace
-  char '('
-  optionalWhitespace
+  _ <- optionalWhitespace
+  _ <- char '('
+  _ <- optionalWhitespace
 
-  string "define"
-  mandatoryWhitespace
+  _ <- string "define"
+  _ <- mandatoryWhitespace
 
-  char '('
-  optionalWhitespace
+  _ <- char '('
+  _ <- optionalWhitespace
   funcName <- identifierString
   arguments <- many $ do
-    mandatoryWhitespace
+    _ <- mandatoryWhitespace
     identifierString
 
-  optionalWhitespace
-  char ')'
-  mandatoryWhitespace
+  _ <- optionalWhitespace
+  _ <- char ')'
+  _ <- mandatoryWhitespace
   body <- expression
-  optionalWhitespace
-  char ')'
-  optionalWhitespace
+  _ <- optionalWhitespace
+  _ <- char ')'
+  _ <- optionalWhitespace
   result $ DefineStatement funcName arguments body
 
 functionCall :: Parser Expression
 functionCall = do
-    optionalWhitespace
-    char '('
-    optionalWhitespace
+    _ <- optionalWhitespace
+    _ <- char '('
+    _ <- optionalWhitespace
     e  <- expression
     es <- many $ do
-      mandatoryWhitespace
+      _ <- mandatoryWhitespace
       ee <- expression
       result $ ee
-    optionalWhitespace
-    char ')'
-    optionalWhitespace
+    _ <- optionalWhitespace
+    _ <- char ')'
+    _ <- optionalWhitespace
     result $ FunctionCall e es
 
 expression :: Parser Expression
@@ -174,9 +175,9 @@ expression =
 program :: Parser [Expression]
 program = do
   es <- many $ do
-    optionalWhitespace
+    _ <- optionalWhitespace
     e <- expression
-    optionalWhitespace
+    _ <- optionalWhitespace
     return e
   endOfInput
   result $ es

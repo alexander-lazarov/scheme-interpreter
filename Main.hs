@@ -14,9 +14,9 @@ getLines = lines <$> getContents
 
 main :: IO ()
 main = do
-    lines <- getLines
+    ls <- getLines
 
-    let nonEmptyLines = takeWhile (not . null) lines
-    let inp = foldl1 (++) $ map (++ "\n") nonEmptyLines :: String
+    let nonEmptyLines = takeWhile (not . null) ls
+    let inp = foldl1 (++) $ map (++ "\n") nonEmptyLines
 
     putStrLn $ show $ evalStr inp
