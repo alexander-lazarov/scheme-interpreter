@@ -23,11 +23,13 @@ arithmeticOpDispatch '+' = (+)
 arithmeticOpDispatch '-' = (-)
 arithmeticOpDispatch '*' = (*)
 arithmeticOpDispatch '/' = quot
+arithmeticOpDispatch _   = error "Unknown operator"
 
 compOpDispatch :: Char -> (Integer -> Integer -> Bool)
 compOpDispatch '=' = (==)
 compOpDispatch '<' = (<)
 compOpDispatch '>' = (>)
+compOpDispatch _   = error "Unknown operator"
 
 eval :: [Binding] -> Expression -> Expression
 eval _        NullLiteral                      = NullLiteral
@@ -64,14 +66,13 @@ dispatch bindings (ArithmeticOp operator) operands =
     operatorFunction = arithmeticOpDispatch operator
     operandValues    = fmap (toInt . eval') operands
 
-dispatch bindings (CompOp op) (x:y:[]) =
+dispatch _ (CompOp op) (x:y:[])       =
   BoolLiteral $ op' xv yv
   where
-    eval' = eval bindings
     op'   = compOpDispatch op
     xv    = toInt x
     yv    = toInt y
-dispatch bindings (CompOp operator) _  = error "Arity mismatch"
+dispatch _      (CompOp _) _  = error "Arity mismatch"
 dispatch bindings (DefineStatement _ defArgs body) callArgs =
   if length defArgs /= length callArgs then
     error "Arity mismatch"
@@ -85,6 +86,7 @@ dispatch bindings (DefineStatement _ defArgs body) callArgs =
 dispatch _ _ _                        = error "Dispatch error"
 
 evalProgram :: [Binding] -> [Expression] -> Expression
+evalProgram _ []            = NullLiteral
 evalProgram bindings (e:[]) = eval bindings e
 evalProgram bindings (e:es) =
   case res of (DefineStatement name _ _) -> evalProgram ((name, res ):bindings) es

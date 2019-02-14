@@ -29,7 +29,7 @@ newtype Parser a = Parser { runParser :: String -> [(String, a)] }
 
 instance Functor Parser where
     fmap :: (a -> b) -> Parser a -> Parser b
-    fmap f (Parser p) = Parser $ \inp -> [(rest, f result) | (rest, result) <- p inp]
+    fmap f (Parser p) = Parser $ \inp -> [(rest, f res) | (rest, res) <- p inp]
 
 instance Applicative Parser where
     pure :: a -> Parser a
@@ -40,8 +40,8 @@ instance Applicative Parser where
 
 instance Monad Parser where
     (>>=) :: Parser a -> (a -> Parser b) -> Parser b
-    (Parser p) >>= f = Parser $ \inp -> [ r | (rest, result) <- p inp
-                                            , r <- runParser (f result) rest ]
+    (Parser p) >>= f = Parser $ \inp -> [ r | (rest, res) <- p inp
+                                            , r <- runParser (f res) rest ]
 
 
 instance Alternative Parser where
